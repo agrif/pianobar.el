@@ -80,11 +80,35 @@ the groups matched will be stored in the associated symbol.")
   "Whether pianobar is currently prompting, or not.
 Set this with (pianobar-set-is-prompting ...).")
 
+(defvar pianobar-modeline-object
+  '(t pianobar-status)
+  "Global mode-line object for pianobar.")
+
+(defvar pianobar-status nil
+  "String (or mode-line construct) used in global pianobar mode line.")
+
+(defvar pianobar-global-modeline t
+  "Set to t to make pianobar status modeline global, or nil otherwise.
+Right now, this setting does not really work. At all.")
+
 (defun pianobar-set-is-prompting (prompting)
   "Set whether pianobar is currently prompting for a string, or not."
   (with-current-buffer pianobar-buffer
 	(set (make-local-variable 'pianobar-is-prompting) prompting)
 	(setq buffer-read-only (not prompting))))
+
+(defun pianobar-update-modeline ()
+  "Update the pianobar modeline with current information."
+  (if (or pianobar-global-modeline (equal (buffer-name) pianobar-buffer))
+	  (setq pianobar-status `("  " ,(pianobar-make-modeline) "  "))
+	(setq pianobar-status nil))
+  (force-mode-line-update))
+
+(defun pianobar-make-modeline ()
+  "Return the new modeline for pianobar-status. Override for custom modeline."
+  (if (and pianobar-current-song pianobar-current-artist)
+	  '("" pianobar-current-song " / " pianobar-current-artist)
+	nil))
 
 (defun pianobar-output-filter (str)
   "Output filter for pianobar-mode."
@@ -93,7 +117,9 @@ Set this with (pianobar-set-is-prompting ...).")
   (dolist (rule pianobar-info-extract-rules)
 	(if (string-match (car rule) str)
 		(dolist (symbol-map (cdr rule))
-		  (set (cdr symbol-map) (match-string (car symbol-map) str))))))
+		  (set (cdr symbol-map) (match-string (car symbol-map) str)))))
+  
+  (pianobar-update-modeline))
 
 (defun pianobar-send-command (char &optional set-active)
   "Send a command character to pianobar, if it's running.
@@ -177,6 +203,11 @@ Returns t on success, nil on error."
 			  (if (stringp pianobar-station)
 				  (comint-send-string buffer (concat pianobar-station "\n")))
 			  (pianobar-mode))
+			
+			(cond ((boundp 'mode-line-modes)
+				   (add-to-list 'mode-line-modes pianobar-modeline-object t))
+				  ((boundp 'global-mode-string)
+				   (add-to-list 'global-mode-string pianobar-modeline-object t)))
 			
 			(if (not pianobar-run-in-background)
 				(set-window-buffer (selected-window) buffer)))))))
