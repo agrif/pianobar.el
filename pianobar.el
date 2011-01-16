@@ -34,7 +34,7 @@
   "Face to use to highlight current song time. (due to bugs, this will only highlight non-current times.)")
 
 (defvar pianobar-mode-font-lock-defaults
-  '(("\\[\\?\\] \\(.*:\\) \\(.*\\)" (1 'pianobar-mode-prompt-face t) (2 'pianobar-mode-input-face t))
+  '(("\\[\\?\\] \\(.*: \\)\\(.*\\)" (1 'pianobar-mode-prompt-face t) (2 'pianobar-mode-input-face t))
 	("|> \\(.*\\)" 1 'pianobar-mode-info-face t)
 	("# +\\(-[0-9]+:[0-9]+/[0-9]+:[0-9]+\\)\\(.*\\)" (1 'pianobar-mode-time-face t) (2 'pianobar-mode-input-face t)))
   "The default syntax-highlighting rules for pianobar-mode.")
@@ -42,6 +42,27 @@
 (defvar pianobar-prompt-regex
   "\\[\\?\\] .*: $"
   "A regex for matching a pianobar prompt.")
+
+(defvar pianobar-current-station nil
+  "The current pianobar station, or nil.")
+
+(defvar pianobar-current-song nil
+  "The current pianobar song title, or nil.")
+
+(defvar pianobar-current-album nil
+  "The current pianobar album title, or nil.")
+
+(defvar pianobar-current-artist nil
+  "The current pianobar artist, or nil.")
+
+(defvar pianobar-info-extract-rules
+  '(("|> +Station \"\\(.+\\)\" +([0-9]*)$" (1 . pianobar-current-station))
+	("|> +\"\\(.*\\)\" by \"\\(.*\\)\" on \"\\(.*\\)\""
+	 (1 . pianobar-current-song) (2 . pianobar-current-artist) (3 . pianobar-current-album)))
+  "A list of cells of the form (regex . matchrules), where
+matchrules is a list of cells of the form (group#
+. symbol). After matching the regexp on new input from pianobar,
+the groups matched will be stored in the associated symbol.")
 
 (defvar pianobar-mode-map
   (let ((map (nconc (make-keymap) comint-mode-map)))
@@ -59,7 +80,12 @@
 
 (defun pianobar-output-filter (str)
   "Output filter for pianobar-mode."
-  (pianobar-mode-set-is-prompting (string-match pianobar-prompt-regex str)))
+  (pianobar-mode-set-is-prompting (string-match pianobar-prompt-regex str))
+  
+  (dolist (rule pianobar-info-extract-rules)
+	(if (string-match (car rule) str)
+		(dolist (symbol-map (cdr rule))
+		  (set (cdr symbol-map) (match-string (car symbol-map) str))))))
 
 (defun pianobar-self-insert-command (N)
   "Custom key-press handler for pianobar mode."
