@@ -95,12 +95,51 @@ Set this with (pianobar-set-is-prompting ...).")
 		(dolist (symbol-map (cdr rule))
 		  (set (cdr symbol-map) (match-string (car symbol-map) str))))))
 
+(defun pianobar-send-command (char &optional set-active)
+  "Send a command character to pianobar, if it's running.
+Returns t on success, nil on error."
+  (if (not (comint-check-proc pianobar-buffer))
+	  (progn (message "Pianobar is not running.") nil)
+	(if pianobar-is-prompting
+		(progn (message "Pianobar is expecting input -- command not sent.") nil)
+	  (comint-send-string pianobar-buffer (char-to-string char))
+	  (if set-active
+		  (set-window-buffer (selected-window) pianobar-buffer))
+	  t)))
+
 (defun pianobar-self-insert-command (N)
   "Custom key-press handler for pianobar mode."
   (interactive "p")
   (if pianobar-is-prompting
 	  (self-insert-command N)
-	(comint-send-string pianobar-buffer (char-to-string last-input-char))))
+	(pianobar-send-command last-input-char)))
+
+(defun pianobar-love-current-song ()
+  "Tell pianobar you love the current song."
+  (interactive)
+  (if (and pianobar-current-song (pianobar-send-command ?+))
+	  (message (concat "Pianobar: Love'd " pianobar-current-song))))
+
+(defun pianobar-ban-current-song ()
+  "Tell pianobar to ban the current song."
+  (interactive)
+  (if (and pianobar-current-song (pianobar-send-command ?-))
+	  (message (concat "Pianobar: Banned " pianobar-current-song))))
+
+(defun pianobar-next-song ()
+  "Tell pianobar to skip to the next song."
+  (interactive)
+  (pianobar-send-command ?n))
+
+(defun pianobar-play-or-pause ()
+  "Toggle pianobar's paused state."
+  (interactive)
+  (pianobar-send-command ?p))
+
+(defun pianobar-change-station ()
+  "Bring up pianobar's station select menu."
+  (interactive)
+  (pianobar-send-command ?s t))
 
 (define-derived-mode pianobar-mode comint-mode "pianobar"
   "Major mode for interacting with pianobar.
