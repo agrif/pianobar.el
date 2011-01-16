@@ -82,8 +82,7 @@
 
 (defun pianobar ()
   (interactive)
-  (let ((buffer (get-buffer-create pianobar-buffer))
-		(username pianobar-username)
+  (let ((username pianobar-username)
 		(password pianobar-password))
 	
 	(unless username
@@ -91,13 +90,15 @@
 	(unless password
 	  (setq password (read-passwd "Pandora password: ")))
 	
-	(with-current-buffer buffer
-	  (unless (comint-check-proc buffer)
-		(make-comint-in-buffer "pianobar" buffer pianobar-command))
-	  (comint-send-string buffer (concat username "\n"))
-	  (comint-send-string buffer (concat password "\n"))
-	  (pianobar-mode))
-	
-	(set-window-buffer (selected-window) buffer)))
+	(if (and (stringp username) (stringp password))
+		(let ((buffer (get-buffer-create pianobar-buffer)))
+		  (with-current-buffer buffer
+			(unless (comint-check-proc buffer)
+			  (make-comint-in-buffer "pianobar" buffer pianobar-command))
+			(comint-send-string buffer (concat username "\n"))
+			(comint-send-string buffer (concat password "\n"))
+			(pianobar-mode))
+		  
+		  (set-window-buffer (selected-window) buffer)))))
 
 (provide 'pianobar)
