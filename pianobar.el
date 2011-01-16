@@ -39,6 +39,35 @@
 	("# +\\(-[0-9]+:[0-9]+/[0-9]+:[0-9]+\\)\\(.*\\)" (1 'pianobar-mode-time-face t) (2 'pianobar-mode-input-face t)))
   "The default syntax-highlighting rules for pianobar-mode.")
 
+(defvar pianobar-prompt-regex
+  "\\[\\?\\] .*: $"
+  "A regex for matching a pianobar prompt.")
+
+(defvar pianobar-mode-map
+  (let ((map (nconc (make-keymap) comint-mode-map)))
+	(substitute-key-definition 'self-insert-command 'pianobar-self-insert-command map global-map)
+	map))
+
+(defvar pianobar-mode-is-prompting nil
+  "Whether pianobar is currently prompting, or not.")
+
+(defun pianobar-mode-set-is-prompting (prompting)
+  "Set whether pianobar is currently prompting for a string, or not."
+  (with-current-buffer pianobar-buffer
+	(set (make-local-variable 'pianobar-mode-is-prompting) prompting)
+	(setq buffer-read-only (not prompting))))
+
+(defun pianobar-output-filter (str)
+  "Output filter for pianobar-mode."
+  (pianobar-mode-set-is-prompting (string-match pianobar-prompt-regex str)))
+
+(defun pianobar-self-insert-command (N)
+  "Custom key-press handler for pianobar mode."
+  (interactive "p")
+  (if pianobar-mode-is-prompting
+	  (self-insert-command N)
+	(comint-send-string pianobar-buffer (char-to-string last-input-char))))
+
 (define-derived-mode pianobar-mode comint-mode "pianobar"
   "Major mode for interacting with pianobar.
 \\{pianobar-mode-map}"
@@ -46,10 +75,10 @@
   (set (make-local-variable 'font-lock-defaults)
 	   '(pianobar-mode-font-lock-defaults t))
   
-  (set (make-local-variable 'comint-highlight-prompt)
-	   'default)
+  (set (make-local-variable 'comint-process-echoes) t)
+  (pianobar-mode-set-is-prompting nil)
   
-  (set (make-local-variable 'comint-process-echoes) t))
+  (add-hook 'comint-output-filter-functions 'pianobar-output-filter nil t))
 
 (defun pianobar ()
   (interactive)
