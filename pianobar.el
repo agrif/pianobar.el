@@ -76,19 +76,19 @@ the groups matched will be stored in the associated symbol.")
 	(substitute-key-definition 'self-insert-command 'pianobar-self-insert-command map global-map)
 	map))
 
-(defvar pianobar-mode-is-prompting nil
+(defvar pianobar-is-prompting nil
   "Whether pianobar is currently prompting, or not.
-Set this with (pianobar-mode-set-is-prompting ...).")
+Set this with (pianobar-set-is-prompting ...).")
 
-(defun pianobar-mode-set-is-prompting (prompting)
+(defun pianobar-set-is-prompting (prompting)
   "Set whether pianobar is currently prompting for a string, or not."
   (with-current-buffer pianobar-buffer
-	(set (make-local-variable 'pianobar-mode-is-prompting) prompting)
+	(set (make-local-variable 'pianobar-is-prompting) prompting)
 	(setq buffer-read-only (not prompting))))
 
 (defun pianobar-output-filter (str)
   "Output filter for pianobar-mode."
-  (pianobar-mode-set-is-prompting (string-match pianobar-prompt-regex str))
+  (pianobar-set-is-prompting (string-match pianobar-prompt-regex str))
   
   (dolist (rule pianobar-info-extract-rules)
 	(if (string-match (car rule) str)
@@ -98,7 +98,7 @@ Set this with (pianobar-mode-set-is-prompting ...).")
 (defun pianobar-self-insert-command (N)
   "Custom key-press handler for pianobar mode."
   (interactive "p")
-  (if pianobar-mode-is-prompting
+  (if pianobar-is-prompting
 	  (self-insert-command N)
 	(comint-send-string pianobar-buffer (char-to-string last-input-char))))
 
@@ -110,7 +110,7 @@ Set this with (pianobar-mode-set-is-prompting ...).")
 	   '(pianobar-mode-font-lock-defaults t))
   
   (set (make-local-variable 'comint-process-echoes) t)
-  (pianobar-mode-set-is-prompting nil)
+  (pianobar-set-is-prompting nil)
   
   (add-hook 'comint-output-filter-functions 'pianobar-output-filter nil t))
 
