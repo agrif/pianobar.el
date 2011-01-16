@@ -115,26 +115,30 @@ the groups matched will be stored in the associated symbol.")
 
 (defun pianobar ()
   (interactive)
-  (let ((username pianobar-username)
-		(password pianobar-password))
+  ;; if we're already running, calling pianobar again will
+  ;; just make the pianobar buffer the visible one
+  (if (comint-check-proc pianobar-buffer)
+	  (set-window-buffer (selected-window) pianobar-buffer)
 	
-	(unless username
-	  (setq username (read-from-minibuffer "Pandora username: ")))
-	(unless password
-	  (setq password (read-passwd "Pandora password: ")))
-	
-	(if (and (stringp username) (stringp password))
-		(let ((buffer (get-buffer-create pianobar-buffer)))
-		  (with-current-buffer buffer
-			(unless (comint-check-proc buffer)
-			  (make-comint-in-buffer "pianobar" buffer pianobar-command))
-			(comint-send-string buffer (concat username "\n"))
-			(comint-send-string buffer (concat password "\n"))
-			(if (stringp pianobar-station)
-				(comint-send-string buffer (concat pianobar-station "\n")))
-			(pianobar-mode))
-		  
-		  (if (not pianobar-run-in-background)
-			  (set-window-buffer (selected-window) buffer))))))
+	(let ((username pianobar-username)
+		  (password pianobar-password))
+	  
+	  (unless username
+		(setq username (read-from-minibuffer "Pandora username: ")))
+	  (unless password
+		(setq password (read-passwd "Pandora password: ")))
+	  
+	  (if (and (stringp username) (stringp password))
+		  (let ((buffer (get-buffer-create pianobar-buffer)))
+			(with-current-buffer buffer
+			  (make-comint-in-buffer "pianobar" buffer pianobar-command)
+			  (comint-send-string buffer (concat username "\n"))
+			  (comint-send-string buffer (concat password "\n"))
+			  (if (stringp pianobar-station)
+				  (comint-send-string buffer (concat pianobar-station "\n")))
+			  (pianobar-mode))
+			
+			(if (not pianobar-run-in-background)
+				(set-window-buffer (selected-window) buffer)))))))
 
 (provide 'pianobar)
