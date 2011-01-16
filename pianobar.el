@@ -14,6 +14,13 @@
 (defvar pianobar-password nil
   "The Pandora password to use, or nil to prompt.")
 
+(defvar pianobar-station nil
+  "The pianobar radio station to automatically select,
+or nil to let you select.")
+
+(defvar pianobar-run-in-background nil
+  "If not nil, don't bring up the pianobar window after launch.")
+
 (defvar pianobar-mode-hook nil
   "A list for storing pianobar-mode hooks.")
 
@@ -123,8 +130,11 @@ the groups matched will be stored in the associated symbol.")
 			  (make-comint-in-buffer "pianobar" buffer pianobar-command))
 			(comint-send-string buffer (concat username "\n"))
 			(comint-send-string buffer (concat password "\n"))
+			(if (stringp pianobar-station)
+				(comint-send-string buffer (concat pianobar-station "\n")))
 			(pianobar-mode))
 		  
-		  (set-window-buffer (selected-window) buffer)))))
+		  (if (not pianobar-run-in-background)
+			  (set-window-buffer (selected-window) buffer))))))
 
 (provide 'pianobar)
