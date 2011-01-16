@@ -77,7 +77,8 @@ the groups matched will be stored in the associated symbol.")
 	map))
 
 (defvar pianobar-mode-is-prompting nil
-  "Whether pianobar is currently prompting, or not.")
+  "Whether pianobar is currently prompting, or not.
+Set this with (pianobar-mode-set-is-prompting ...).")
 
 (defun pianobar-mode-set-is-prompting (prompting)
   "Set whether pianobar is currently prompting for a string, or not."
