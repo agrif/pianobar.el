@@ -1,3 +1,61 @@
+;; pianobar.el - Thin Pianobar wrapper for emacs
+;; Copyright (c) 2011, Aaron Griffith <aargri@gmail.com>
+;; This file is licensed under the GNU GPL -- see below.
+;;
+;; Pianobar is a command-line client for Pandora <http://pandora.com>,
+;; written by Lars-Dominik Braun (and others), which can be found at
+;; <http://6xq.net/html/00/17.html>.
+;;
+;; There is a README that should have come with this file that
+;; contains more detailed information than what's here. If you can't
+;; find it, you can find it on GitHub at <http://github.com/agrif/pianobar.el>.
+;;
+;; Suggestions, improvements, and bug reports are welcome. This is a
+;; *very* early version, so expect there to be many!
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                           INSTALLATION                           ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; Installation instructions:
+;;
+;; 1. Put this file in your emacs load path OR add the following to
+;;    your .emacs file (modifying the path appropriately):
+;;
+;;    (add-to-list 'load-path "/home/agrif/emacsinclude")
+;;
+;; 2. Add the following to your .emacs file to load this file
+;;    automatically when M-x pianobar is run:
+;;
+;;    (autoload 'pianobar "pianobar" nil t)
+;;
+;; 3. (Optional) Customize pianobar! See the README for information on
+;;     what variables are available to set.
+;;
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                              LICENSE                             ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; This file is released under the GNU GPL.
+;;
+;; This program is free software: you can redistribute it and/or modify
+;; it under the terms of the GNU General Public License as published by
+;; the Free Software Foundation, either version 3 of the License, or
+;; (at your option) any later version.
+;;
+;; This program is distributed in the hope that it will be useful,
+;; but WITHOUT ANY WARRANTY; without even the implied warranty of
+;; MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+;; GNU General Public License for more details.
+;;
+;; You should have received a copy of the GNU General Public License
+;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;                       END OF DOCUMENTATION                       ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 (require 'comint)
 
 (defvar pianobar-buffer
