@@ -260,6 +260,7 @@ Returns t on success, nil on error."
 			  (comint-send-string buffer (concat password "\n"))
 			  (if (stringp pianobar-station)
 				  (comint-send-string buffer (concat pianobar-station "\n")))
+			  (buffer-disable-undo)
 			  (pianobar-mode))
 			
 			(cond ((boundp 'mode-line-modes)
