@@ -168,6 +168,13 @@ Right now, this setting does not really work. At all.")
 	  '("" pianobar-current-song " / " pianobar-current-artist)
 	nil))
 
+(defun pianobar-preoutput-filter (str)
+  "Preoutput filter for pianobar-mode. Cleans up unhandled ANSI escapes."
+  ;; clean the string up first -- remove unhandled escape codes
+  ;; sort of a hack fix for change introduced into pianobar at commit
+  ;; eadc96008ca6fa0a335ab35daaff0cfd24546cf9 on December 27, 2010
+  (replace-regexp-in-string "\033\\[2K" "" str))
+
 (defun pianobar-output-filter (str)
   "Output filter for pianobar-mode."
   (pianobar-set-is-prompting (string-match pianobar-prompt-regex str))
@@ -235,7 +242,8 @@ Returns t on success, nil on error."
   (set (make-local-variable 'comint-process-echoes) t)
   (pianobar-set-is-prompting nil)
   
-  (add-hook 'comint-output-filter-functions 'pianobar-output-filter nil t))
+  (add-hook 'comint-output-filter-functions 'pianobar-output-filter nil t)
+  (add-hook 'comint-preoutput-filter-functions 'pianobar-preoutput-filter nil t))
 
 (defun pianobar ()
   (interactive)
