@@ -1,7 +1,10 @@
-;; pianobar.el - Thin Pianobar wrapper for emacs
+;;; pianobar.el - Thin Pianobar wrapper
+
 ;; Copyright (c) 2011, Aaron Griffith <aargri@gmail.com>
 ;; This file is licensed under the GNU GPL -- see below.
-;;
+
+;;; Commentary:
+
 ;; Pianobar is a command-line client for Pandora <http://pandora.com>,
 ;; written by Lars-Dominik Braun (and others), which can be found at
 ;; <http://6xq.net/html/00/17.html>.
@@ -55,6 +58,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;                       END OF DOCUMENTATION                       ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;; Code:
 
 (require 'comint)
 
