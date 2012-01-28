@@ -183,12 +183,12 @@ Right now, this setting does not really work. At all.")
 (defun pianobar-output-filter (str)
   "Output filter for pianobar-mode."
   (pianobar-set-is-prompting (string-match pianobar-prompt-regex str))
-  
+
   (dolist (rule pianobar-info-extract-rules)
 	(if (string-match (car rule) str)
 		(dolist (symbol-map (cdr rule))
 		  (set (cdr symbol-map) (match-string (car symbol-map) str)))))
-  
+
   (pianobar-update-modeline))
 
 (defun pianobar-send-command (char &optional set-active)
@@ -240,13 +240,13 @@ Returns t on success, nil on error."
 (define-derived-mode pianobar-mode comint-mode "pianobar"
   "Major mode for interacting with pianobar.
 \\{pianobar-mode-map}"
-  
+
   (set (make-local-variable 'font-lock-defaults)
 	   '(pianobar-mode-font-lock-defaults t))
-  
+
   (set (make-local-variable 'comint-process-echoes) t)
   (pianobar-set-is-prompting nil)
-  
+
   (add-hook 'comint-output-filter-functions 'pianobar-output-filter nil t)
   (add-hook 'comint-preoutput-filter-functions 'pianobar-preoutput-filter nil t))
 
@@ -256,15 +256,15 @@ Returns t on success, nil on error."
   ;; just make the pianobar buffer the visible one
   (if (comint-check-proc pianobar-buffer)
 	  (set-window-buffer (selected-window) pianobar-buffer)
-	
+
 	(let ((username pianobar-username)
 		  (password pianobar-password))
-	  
+
 	  (unless username
 		(setq username (read-from-minibuffer "Pandora username: ")))
 	  (unless password
 		(setq password (read-passwd "Pandora password: ")))
-	  
+
 	  (if (and (stringp username) (stringp password))
 		  (let ((buffer (get-buffer-create pianobar-buffer)))
 			(with-current-buffer buffer
@@ -275,12 +275,12 @@ Returns t on success, nil on error."
 				  (comint-send-string buffer (concat pianobar-station "\n")))
 			  (buffer-disable-undo)
 			  (pianobar-mode))
-			
+
 			(cond ((boundp 'mode-line-modes)
 				   (add-to-list 'mode-line-modes pianobar-modeline-object t))
 				  ((boundp 'global-mode-string)
 				   (add-to-list 'global-mode-string pianobar-modeline-object t)))
-			
+
 			(if (not pianobar-run-in-background)
 				(set-window-buffer (selected-window) buffer)))))))
 
