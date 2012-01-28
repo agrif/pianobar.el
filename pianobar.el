@@ -1,7 +1,10 @@
-;;; pianobar.el - Thin Pianobar wrapper
+;;; pianobar.el --- thin wrapper for Pianobar, a Pandora Radio client
 
-;; Copyright (c) 2011, Aaron Griffith <aargri@gmail.com>
+;; Copyright (c) 2011, Aaron Griffith
 ;; This file is licensed under the GNU GPL -- see below.
+
+;; Author: Aaron Griffith <aargri@gmail.com>
+;; Homepage: http://github.com/agrif/pianobar.el
 
 ;;; Commentary:
 
@@ -16,9 +19,7 @@
 ;; Suggestions, improvements, and bug reports are welcome. This is a
 ;; *very* early version, so expect there to be many!
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                           INSTALLATION                           ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Installation:
 
 ;; Installation instructions:
 ;;
@@ -36,9 +37,7 @@
 ;;     what variables are available to set.
 ;;
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                              LICENSE                             ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; License:
 
 ;; This file is released under the GNU GPL.
 ;;
@@ -54,10 +53,6 @@
 ;;
 ;; You should have received a copy of the GNU General Public License
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;                       END OF DOCUMENTATION                       ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;;; Code:
 
@@ -285,3 +280,5 @@ Returns t on success, nil on error."
 				(set-window-buffer (selected-window) buffer)))))))
 
 (provide 'pianobar)
+
+;;; pianobar.el ends here
