@@ -245,6 +245,7 @@ Returns t on success, nil on error."
   (add-hook 'comint-output-filter-functions 'pianobar-output-filter nil t)
   (add-hook 'comint-preoutput-filter-functions 'pianobar-preoutput-filter nil t))
 
+;;;###autoload
 (defun pianobar ()
   (interactive)
   ;; if we're already running, calling pianobar again will
