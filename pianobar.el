@@ -203,7 +203,7 @@ Returns t on success, nil on error."
   (interactive "p")
   (if pianobar-is-prompting
 	  (self-insert-command N)
-	(pianobar-send-command last-input-char)))
+	(pianobar-send-command last-input-event)))
 
 (defun pianobar-love-current-song ()
   "Tell pianobar you love the current song."
