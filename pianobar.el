@@ -203,7 +203,7 @@ Returns t on success, nil on error."
   (interactive "p")
   (if pianobar-is-prompting
 	  (self-insert-command N)
-	(pianobar-send-command last-input-char)))
+	(pianobar-send-command last-input-event)))
 
 (defun pianobar-love-current-song ()
   "Tell pianobar you love the current song."
@@ -245,6 +245,7 @@ Returns t on success, nil on error."
   (add-hook 'comint-output-filter-functions 'pianobar-output-filter nil t)
   (add-hook 'comint-preoutput-filter-functions 'pianobar-preoutput-filter nil t))
 
+;;;###autoload
 (defun pianobar ()
   (interactive)
   ;; if we're already running, calling pianobar again will
