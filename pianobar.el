@@ -148,9 +148,14 @@ Set this with (pianobar-set-is-prompting ...).")
 (defvar pianobar-status nil
   "String (or mode-line construct) used in global pianobar mode line.")
 
-(defvar pianobar-global-modeline t
-  "Set to t to make pianobar status modeline global, or nil otherwise.
-Right now, this setting does not really work. At all.")
+(defvar pianobar-enable-modeline t
+  "Set to nil to hide updates in the modeline.")
+
+(defalias 'pianobar-global-modeline 'pianobar-enable-modeline
+  "`pianobar-global-modeline' never worked properly, so it was removed
+in favor of pianobar-enable-modeline.")
+
+(make-obsolete 'pianobar-global-modeline 'pianobar-enable-modeline "2017-11-17")
 
 (defun pianobar-set-is-prompting (prompting)
   "Set whether pianobar is currently prompting for a string, or not."
@@ -160,7 +165,7 @@ Right now, this setting does not really work. At all.")
 
 (defun pianobar-update-modeline ()
   "Update the pianobar modeline with current information."
-  (if (or pianobar-global-modeline (equal (buffer-name) pianobar-buffer))
+  (if pianobar-enable-modeline
 	  (setq pianobar-status `("  " ,(pianobar-make-modeline) "  "))
 	(setq pianobar-status nil))
   (force-mode-line-update))
@@ -217,7 +222,8 @@ Returns t on success, nil on error."
 (defun pianobar-ban-current-song ()
   "Tell pianobar to ban the current song."
   (interactive)
-  (if (and pianobar-current-song (pianobar-send-command ?-))
+  (if (and pianobar-current-song
+		   (pianobar-send-command ?-))
 	  (message (concat "Pianobar: Banned " pianobar-current-song))))
 
 (defun pianobar-next-song ()
