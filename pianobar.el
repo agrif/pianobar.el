@@ -260,8 +260,8 @@ Returns t on success, nil on error."
       (with-current-buffer buffer
         (make-comint-in-buffer "pianobar" buffer pianobar-command)
         (unless pianobar-config
-          (comint-send-string buffer (concat (or (stringp pianobar-username) (read-from-minibuffer "Pandora username: ")) "\n"))
-          (comint-send-string buffer (concat (or (stringp pianobar-password) (read-passwd "Pandora password: ")) "\n")))
+          (comint-send-string buffer (concat (or pianobar-username (read-from-minibuffer "Pandora username: ")) "\n"))
+          (comint-send-string buffer (concat (or pianobar-password (read-passwd "Pandora password: ")) "\n")))
         (if (stringp pianobar-station)
             (comint-send-string buffer (concat pianobar-station "\n")))
         (buffer-disable-undo)
