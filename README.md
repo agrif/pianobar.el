@@ -1,3 +1,6 @@
+Pianobar.el [![MELPA](http://melpa.org/packages/pianobar-badge.svg)](http://melpa.org/#/pianobar)
+===========
+
 This is a thin emacs interface for Pianobar, a Pandora Radio
 <http://pandora.com/> command-line client. Pianobar was written by
 Lars-Dominik Braun, among others, and can be found at
