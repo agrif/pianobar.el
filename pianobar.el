@@ -55,6 +55,7 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Code:
+;;;; Variables
 
 (require 'comint)
 
@@ -152,6 +153,8 @@ Set this with (pianobar-set-is-prompting ...).")
   "Set to t to make pianobar status modeline global, or nil otherwise.
 Right now, this setting does not really work. At all.")
 
+;;;; Helper Functions
+
 (defun pianobar-set-is-prompting (prompting)
   "Set whether pianobar is currently prompting for a string, or not."
   (with-current-buffer pianobar-buffer
@@ -208,6 +211,8 @@ Returns t on success, nil on error."
 	  (self-insert-command N)
 	(pianobar-send-command last-input-event)))
 
+;;;; Interactive Functions
+
 (defun pianobar-love-current-song ()
   "Tell pianobar you love the current song."
   (interactive)
@@ -219,6 +224,24 @@ Returns t on success, nil on error."
   (interactive)
   (if (and pianobar-current-song (pianobar-send-command ?-))
 	  (message (concat "Pianobar: Banned " pianobar-current-song))))
+
+(defun pianobar-shelve-current-song ()
+  "Tell pianobar to shelve  the current song for a month (tired)."
+  (interactive)
+  (if (and pianobar-current-song (pianobar-send-command ?t))
+	  (message (concat "Pianobar: Shelved " pianobar-current-song))))
+
+(defun pianobar-volume-up ()
+  "Tell pianobar increase the volume."
+  (interactive)
+  ;; volume up is )
+  (pianobar-send-command ?\) ))
+
+(defun pianobar-volume-down ()
+  "Tell pianobar to lower the volume."
+  (interactive)
+  ;; volume up is )
+  (pianobar-send-command ?\( ))
 
 (defun pianobar-next-song ()
   "Tell pianobar to skip to the next song."
@@ -247,6 +270,8 @@ Returns t on success, nil on error."
 
   (add-hook 'comint-output-filter-functions 'pianobar-output-filter nil t)
   (add-hook 'comint-preoutput-filter-functions 'pianobar-preoutput-filter nil t))
+
+;;;; Main Definition
 
 ;;;###autoload
 (defun pianobar ()
