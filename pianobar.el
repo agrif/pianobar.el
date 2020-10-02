@@ -58,6 +58,7 @@
 ;;;; Variables
 
 (require 'comint)
+(require 'subr-x)
 
 (defvar pianobar-buffer
   "*pianobar*"
@@ -169,7 +170,8 @@ in favor of pianobar-enable-modeline.")
 
 (defun pianobar-update-modeline ()
   "Update the pianobar modeline with current information."
-  (if pianobar-enable-modeline
+  (if (and pianobar-enable-modeline
+           (comint-check-proc pianobar-buffer))
       (setq pianobar-status `("  " ,(pianobar-make-modeline) "  "))
     (setq pianobar-status nil))
   (force-mode-line-update))
@@ -312,6 +314,15 @@ Returns t on success, nil on error."
 
       (if (not pianobar-run-in-background)
           (set-window-buffer (selected-window) buffer)))))
+
+(defun pianobar-quit ()
+  "Quit the currently running pianobar buffer, and clean up state."
+  (interactive)
+  (when (get-buffer pianobar-buffer)
+    (when-let ((process (get-buffer-process pianobar-buffer)))
+      (set-process-query-on-exit-flag process nil))
+    (kill-buffer pianobar-buffer))
+  (pianobar-update-modeline))
 
 (provide 'pianobar)
 
