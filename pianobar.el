@@ -129,7 +129,7 @@ or nil to let you select.")
 (defvar pianobar-current-artist nil
   "The current pianobar artist, or nil.")
 
-(defclass pianobar-song ()              ; No superclasses
+(defclass pianobar-song ()
   ((name :initarg :name
          :initform ""
          :type string
