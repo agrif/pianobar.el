@@ -59,6 +59,7 @@
 
 (require 'comint)
 (require 'subr-x)
+(require 'eieio)
 
 (defvar pianobar-buffer
   "*pianobar*"
@@ -113,6 +114,9 @@ or nil to let you select.")
   "\\[\\?\\] .*: $"
   "A regex for matching a pianobar prompt.")
 
+(defvar pianobar-songs '()
+  "A list of all pianobar songs played this session.")
+
 (defvar pianobar-current-station nil
   "The current pianobar station, or nil.")
 
@@ -124,6 +128,21 @@ or nil to let you select.")
 
 (defvar pianobar-current-artist nil
   "The current pianobar artist, or nil.")
+
+(defclass pianobar-song ()              ; No superclasses
+  ((name :initarg :name
+         :initform ""
+         :type string
+         :documentation "The name of the song")
+   (artist :initarg :artist
+           :initform ""
+           :type string
+           :documentation "The song's recording artist")
+   (album :initarg :album
+          :initform ""
+          :type string
+          :documentation "The album the song is from"))
+  "A class for Pianobar songs")
 
 (defvar pianobar-info-extract-rules
   '(("|> +Station \"\\(.+\\)\" +([0-9]*)$" (1 . pianobar-current-station))
@@ -197,7 +216,7 @@ in favor of pianobar-enable-modeline.")
     (if (string-match (car rule) str)
         (dolist (symbol-map (cdr rule))
           (set (cdr symbol-map) (match-string (car symbol-map) str)))))
-
+  (push (pianobar-song :name pianobar-current-song :artist pianobar-current-artist :album pianobar-current-album) pianobar-songs)
   (pianobar-update-modeline))
 
 (defun pianobar-send-command (char &optional set-active)
@@ -238,7 +257,7 @@ Returns t on success, nil on error."
   "Tell pianobar to shelve  the current song for a month (tired)."
   (interactive)
   (if (and pianobar-current-song (pianobar-send-command ?t))
-	  (message (concat "Pianobar: Shelved " pianobar-current-song))))
+    (message (concat "Pianobar: Shelved " pianobar-current-song))))
 
 (defun pianobar-volume-up ()
   "Tell pianobar increase the volume."
