@@ -216,7 +216,6 @@ in favor of pianobar-enable-modeline.")
     (if (string-match (car rule) str)
         (dolist (symbol-map (cdr rule))
           (set (cdr symbol-map) (match-string (car symbol-map) str)))))
-  (push (pianobar-song :name pianobar-current-song :artist pianobar-current-artist :album pianobar-current-album) pianobar-songs)
   (pianobar-update-modeline))
 
 (defun pianobar-send-command (char &optional set-active)
